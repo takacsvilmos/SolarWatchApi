@@ -20,5 +20,16 @@ namespace SolarWatch.Services
 
             throw new InvalidOperationException("No city available");
         }
+
+        public SunriseSunsetTime MakeSunriseSunsetTime(string data)
+        {
+            JsonDocument json = JsonDocument.Parse(data);
+            JsonElement rootElement = json.RootElement;
+            JsonElement resultsElement = rootElement.GetProperty("results");
+            string sunrise = resultsElement.GetProperty("sunrise").GetString();
+            string sunset = resultsElement.GetProperty("sunset").GetString();
+
+            return new SunriseSunsetTime(sunrise, sunset);
+        }
     }
 }
