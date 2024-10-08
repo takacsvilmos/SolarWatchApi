@@ -11,6 +11,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IJsonProcessor, JsonProcessor>();
 builder.Services.AddSingleton<CityCoordinatesApi>();
+builder.Services.AddSingleton<IWebClient, CustomWebClient>();
 builder.Services.AddSingleton<SunriseSunsetApi>();
 
 
