@@ -27,5 +27,21 @@ namespace SolarWatchTests
             var result = service.GetSunriseSunsetString(latitude, longitude, date);
             Assert.AreEqual(expectedResponse, result);
         }
+
+        [Test]
+        public void GetCityCoordinates_ShouldReturnExpectedResult()
+        {
+            var expectedResponse = "{latitude:47.4979, longitude: 19.0402 }";
+            var city = "Budapest";
+
+            var mockWebClient = new Mock<IWebClient>();
+            mockWebClient.Setup(client => client.DownloadString(It.IsAny<string>()))
+                .Returns(expectedResponse);
+            var mockLogger = new Mock<ILogger<CityCoordinatesApi>>();
+            var service = new CityCoordinatesApi(mockLogger.Object, mockWebClient.Object);
+
+            var result = service.GetCityCoordinates(city);
+            Assert.AreEqual(expectedResponse, result);
+        }
     }
 }
