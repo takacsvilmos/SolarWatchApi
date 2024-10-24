@@ -16,13 +16,13 @@ namespace SolarWatch.Services
             _configuration = configuration;
         }
 
-        public string GetCityCoordinates(string city)
+        public async Task<string> GetCityCoordinates(string city)
         {
             var apiKey = _configuration["ApiKeys:CityCoordinatesApiKey"];
             var url = $"http://api.openweathermap.org/geo/1.0/direct?q={city}&limit=5&appid={apiKey}";
             
             _logger.LogInformation("Calling openWeather API with url: {url}", url);
-            return _client.DownloadString(url);
+            return await _client.DownloadString(url);
         }
     }
 }

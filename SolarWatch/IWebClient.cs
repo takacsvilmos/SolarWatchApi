@@ -2,6 +2,6 @@
 {
     public interface IWebClient
     {
-        string DownloadString(string url);
+        Task<string> DownloadString(string url);
     }
 }

@@ -13,12 +13,12 @@ namespace SolarWatch.Services
             _webClient = webClient;
         }
 
-        public string GetSunriseSunsetString(double latitude, double longitude, DateOnly date)
+        public async Task<string> GetSunriseSunsetString(double latitude, double longitude, DateOnly date)
         {
             
             var url = $"https://api.sunrise-sunset.org/json?lat={latitude}&lng={longitude}&date={date.ToString("yyyy-MM-dd")}";
             _logger.LogInformation("Calling Sunset and sunrise times API with url: {url}", url);
-            return _webClient.DownloadString(url);
+            return await _webClient.DownloadString(url);
         }
     }
 }

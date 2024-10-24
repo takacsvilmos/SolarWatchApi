@@ -32,18 +32,18 @@ namespace SolarWatchTests
         }
 
         [Test]
-        public void GetCityCoordinates_ShouldReturnExpectedResult()
+        public async Task GetCityCoordinates_ShouldReturnExpectedResult()
         {
             var expectedResponse = "{latitude:47.4979, longitude: 19.0402 }";
             var city = "Budapest";
 
             var mockWebClient = new Mock<IWebClient>();
             mockWebClient.Setup(client => client.DownloadString(It.IsAny<string>()))
-                .Returns(expectedResponse);
+                .ReturnsAsync(expectedResponse);
             var mockLogger = new Mock<ILogger<CityCoordinatesApi>>();
             var service = new CityCoordinatesApi(mockLogger.Object, mockWebClient.Object);
 
-            var result = service.GetCityCoordinates(city);
+            var result = await service.GetCityCoordinates(city);
             Assert.AreEqual(expectedResponse, result);
         }
 

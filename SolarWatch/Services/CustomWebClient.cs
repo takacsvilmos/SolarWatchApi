@@ -4,15 +4,15 @@ namespace SolarWatch.Services
 {
     public class CustomWebClient : IWebClient
     {
-        private readonly WebClient _client;
+        private readonly HttpClient _client;
         public CustomWebClient() 
             { 
-            _client = new WebClient();
+            _client = new HttpClient();
             }
 
-        public string DownloadString(string url) 
+        public async Task<string> DownloadString(string url) 
             { 
-            return _client.DownloadString(url);
+            return await _client.GetStringAsync(url);
             }
 
     }

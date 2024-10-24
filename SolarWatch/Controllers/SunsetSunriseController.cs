@@ -45,14 +45,14 @@ namespace SolarWatch.Controllers
                 }
 
                 var date = new DateOnly(year, month, day);
-                var cityData = _cityCoordinatesApi.GetCityCoordinates(city);
+                var cityData = await _cityCoordinatesApi.GetCityCoordinates(city);
                 if (cityData == null)
                 {
                     return NotFound($"City '{city}' not found.");
                 }
 
                 var cityCoordinates = _jsonProcessor.Process(cityData);
-                var sunriseAndSunsetData =
+                var sunriseAndSunsetData =  await
                     _sunriseSunsetApi.GetSunriseSunsetString(cityCoordinates.Lat, cityCoordinates.Longitude, date);
                 if (string.IsNullOrEmpty(sunriseAndSunsetData))
                 {
