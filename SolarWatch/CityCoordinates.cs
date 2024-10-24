@@ -1,6 +1,8 @@
-﻿namespace SolarWatch
+﻿using SolarWatch;
+
+namespace SolarWatch
 {
-    public class CityCoordinates
+    public struct CityCoordinates
     {
         public double Lat { get; }
         public double Longitude { get; }

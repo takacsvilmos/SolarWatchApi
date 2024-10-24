@@ -19,10 +19,11 @@ namespace SolarWatch.Controllers
             _cityCoordinatesApi = cityCoordinatesApi;
             _jsonProcessor = jsonProcessor;
             _sunriseSunsetApi = sunriseSunsetApi;
+          
         }
 
         [HttpGet("ByCity")]
-        public IActionResult Get(string city, int year, int month, int day)
+        public async Task<ActionResult<SunriseSunsetData>> Get(string city, int year, int month, int day)
         {
             try
             {

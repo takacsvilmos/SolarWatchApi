@@ -7,16 +7,18 @@ namespace SolarWatch.Services
     {
         private readonly ILogger<CityCoordinatesApi> _logger;
         private readonly IWebClient _client;
+        private readonly IConfiguration _configuration;
 
-        public CityCoordinatesApi(ILogger<CityCoordinatesApi> logger, IWebClient client)
+        public CityCoordinatesApi(ILogger<CityCoordinatesApi> logger, IWebClient client, IConfiguration configuration)
         {
             _logger = logger;
             _client = client;
+            _configuration = configuration;
         }
 
         public string GetCityCoordinates(string city)
         {
-            var apiKey = "498c6649b077e74b3bee6e05708d9bfb";
+            var apiKey = _configuration["ApiKeys:CityCoordinatesApiKey"];
             var url = $"http://api.openweathermap.org/geo/1.0/direct?q={city}&limit=5&appid={apiKey}";
             
             _logger.LogInformation("Calling openWeather API with url: {url}", url);
