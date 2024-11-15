@@ -1,6 +1,10 @@
 ﻿using System.Runtime.InteropServices.JavaScript;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
+using SolarWatch.Models;
 using SolarWatch.Services;
+using System.Linq;
+using Microsoft.AspNetCore.OutputCaching;
 
 namespace SolarWatch.Controllers
 {
@@ -69,5 +73,29 @@ namespace SolarWatch.Controllers
                 return StatusCode(500, "An unexpected error occurred.");
             }
         }
+
+        [HttpGet("Db")]
+        public async Task<ActionResult<SunriseSunset>> GetSunriseSunsetToDb(string city, string inputDate)
+        {
+            try
+            {
+                var dateArray = inputDate.Split("-");
+                var date = new DateOnly(int.Parse(dateArray[0]), int.Parse(dateArray[1]),int.Parse(dateArray[2]));
+                var cityData = await _cityCoordinatesApi.GetCityCoordinates(city);
+                if (cityData == null)
+                {
+                    return NotFound($"City '{city}' not found.");
+                }
+
+                var cityObject = _jsonProcessor.MakeNewCityObjectFromApiJSON(cityData);
+                return Ok(cityObject);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting the sunrise/sunset");
+                return StatusCode(500, "Unexpected error occured.");
+            }
+        }
+        
     }
 }

@@ -13,7 +13,10 @@ builder.Services.AddSingleton<IJsonProcessor, JsonProcessor>();
 builder.Services.AddSingleton<CityCoordinatesApi>();
 builder.Services.AddSingleton<IWebClient, CustomWebClient>();
 builder.Services.AddSingleton<SunriseSunsetApi>();
-
+if (builder.Environment.IsDevelopment())
+{
+    builder.Configuration.AddUserSecrets<Program>();
+}
 
 var app = builder.Build();
 
