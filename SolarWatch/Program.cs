@@ -1,4 +1,6 @@
+using Microsoft.EntityFrameworkCore;
 using SolarWatch;
+using SolarWatch.Data;
 using SolarWatch.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +19,9 @@ if (builder.Environment.IsDevelopment())
 {
     builder.Configuration.AddUserSecrets<Program>();
 }
+
+builder.Services.AddDbContext<SolarwatchDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 

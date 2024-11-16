@@ -8,7 +8,7 @@
         public double Longitude { get; set; }
         public string State { get; set; }
         public string Country { get; set; }
-        public ICollection<SunriseSunset> SunriseSunsets { get; } = new List<SunriseSunset>();
+        public ICollection<SunriseSunset> SunriseSunsets { get; init; } = new List<SunriseSunset>();
         public City(string cityName, double latitude, double longitude, string state, string country)
         {
             Id = Guid.NewGuid();

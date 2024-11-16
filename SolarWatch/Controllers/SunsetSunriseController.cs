@@ -88,6 +88,18 @@ namespace SolarWatch.Controllers
                 }
 
                 var cityObject = _jsonProcessor.MakeNewCityObjectFromApiJSON(cityData);
+                var sunriseSunsetApiResponseObject =
+                    await _sunriseSunsetApi.GetSunriseSunsetString(cityObject.Latitude, cityObject.Longitude, date);
+                if (string.IsNullOrEmpty(sunriseSunsetApiResponseObject))
+                {
+                    return StatusCode(500, "Error retrieving sunset and sunrise data");
+                }
+
+                var sunriseSunsetTime = _jsonProcessor.MakeSunriseSunsetTime(sunriseSunsetApiResponseObject);
+                var SunriseSunsetObject =
+                    new SunriseSunset(cityObject.Id, sunriseSunsetTime.Sunrise, sunriseSunsetTime.Sunset);
+                cityObject.SunriseSunsets.Add(SunriseSunsetObject);
+                
                 return Ok(cityObject);
             }
             catch (Exception ex)
