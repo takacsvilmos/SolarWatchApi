@@ -8,8 +8,9 @@ namespace SolarWatch.Services
 
         public CityService(SolarwatchDbContext dbContext)
         {
-
+            _dbContext = dbContext;
         }
+
 
     }
 }

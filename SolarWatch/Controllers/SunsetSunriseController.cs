@@ -97,7 +97,7 @@ namespace SolarWatch.Controllers
 
                 var sunriseSunsetTime = _jsonProcessor.MakeSunriseSunsetTime(sunriseSunsetApiResponseObject);
                 var SunriseSunsetObject =
-                    new SunriseSunset(cityObject.Id, sunriseSunsetTime.Sunrise, sunriseSunsetTime.Sunset);
+                    new SunriseSunset(cityObject.Id,date, sunriseSunsetTime.Sunrise, sunriseSunsetTime.Sunset);
                 cityObject.SunriseSunsets.Add(SunriseSunsetObject);
                 
                 return Ok(cityObject);
