@@ -5,6 +5,8 @@ using SolarWatch.Models;
 using SolarWatch.Services;
 using System.Linq;
 using Microsoft.AspNetCore.OutputCaching;
+using Microsoft.EntityFrameworkCore;
+using SolarWatch.Data;
 
 namespace SolarWatch.Controllers
 {
@@ -16,13 +18,15 @@ namespace SolarWatch.Controllers
         private readonly CityCoordinatesApi _cityCoordinatesApi;
         private readonly IJsonProcessor _jsonProcessor;
         private readonly SunriseSunsetApi _sunriseSunsetApi;
+        private readonly SolarwatchDbContext _solarwatchDbContext;
 
-        public SunsetSunriseController(ILogger<SunsetSunriseController> logger, CityCoordinatesApi cityCoordinatesApi, IJsonProcessor jsonProcessor, SunriseSunsetApi sunriseSunsetApi)
+        public SunsetSunriseController(ILogger<SunsetSunriseController> logger, CityCoordinatesApi cityCoordinatesApi, IJsonProcessor jsonProcessor, SunriseSunsetApi sunriseSunsetApi, SolarwatchDbContext solarwatchDbContext)
         {
             _logger = logger;
             _cityCoordinatesApi = cityCoordinatesApi;
             _jsonProcessor = jsonProcessor;
             _sunriseSunsetApi = sunriseSunsetApi;
+            _solarwatchDbContext = solarwatchDbContext;
           
         }
 
@@ -81,6 +85,15 @@ namespace SolarWatch.Controllers
             {
                 var dateArray = inputDate.Split("-");
                 var date = new DateOnly(int.Parse(dateArray[0]), int.Parse(dateArray[1]),int.Parse(dateArray[2]));
+
+                var searchedCity = _solarwatchDbContext.Cities
+                    .Include(city => city.SunriseSunsets)
+                    .FirstOrDefault(c => c.CityName == city && c.SunriseSunsets.Any(s => s.Date == date));
+                if (searchedCity != null)
+                {
+                    return Ok(searchedCity);
+                }
+                
                 var cityData = await _cityCoordinatesApi.GetCityCoordinates(city);
                 if (cityData == null)
                 {
@@ -99,7 +112,10 @@ namespace SolarWatch.Controllers
                 var SunriseSunsetObject =
                     new SunriseSunset(cityObject.Id,date, sunriseSunsetTime.Sunrise, sunriseSunsetTime.Sunset);
                 cityObject.SunriseSunsets.Add(SunriseSunsetObject);
-                
+
+                _solarwatchDbContext.Cities.Add(cityObject);
+                await _solarwatchDbContext.SaveChangesAsync();
+
                 return Ok(cityObject);
             }
             catch (Exception ex)
