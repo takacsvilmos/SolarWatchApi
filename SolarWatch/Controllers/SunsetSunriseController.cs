@@ -4,6 +4,7 @@ using Microsoft.Identity.Client;
 using SolarWatch.Models;
 using SolarWatch.Services;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.EntityFrameworkCore;
 using SolarWatch.Data;

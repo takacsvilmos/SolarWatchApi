@@ -1,6 +1,5 @@
 .vs
 SolarWatch/bin
 SolarWatch/obj
-SolarWatch/appsettings.Development.json
 SolarWatchTests/obj
 SolarWatchTests/bin
