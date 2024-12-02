@@ -1,0 +1,7 @@
+.vs
+SolarWatch/bin
+SolarWatch/obj
+SolarWatchTests/obj
+SolarWatchTests/bin
+SolarWatchIntegralTest/bin
+SolarWatchIntegralTest/obj
