@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.EntityFrameworkCore;
+using SolarWatch.Contracts;
 using SolarWatch.Data;
 
 namespace SolarWatch.Controllers
@@ -127,11 +128,45 @@ namespace SolarWatch.Controllers
             }
         }
 
-        [HttpGet("AllCities"), Authorize(Roles = "User, Admin")]
-        public async Task<ActionResult<DbSet<City>>> GetCities()
+        [HttpPatch("Update/{id}"), Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateCity(Guid id, [FromBody] CityUpdateDto updateDto)
         {
-            var cities = _solarwatchDbContext.Cities;
-            return cities;
+            var updateCity = await _solarwatchDbContext.Cities.FindAsync(id);
+            if (updateCity == null)
+            {
+                return NotFound();
+            }
+
+            if (!string.IsNullOrEmpty(updateDto.CityName))
+            {
+                updateCity.CityName = updateDto.CityName;
+            }
+            if (updateDto.Latitude.HasValue)
+            {
+                updateCity.Latitude = updateDto.Latitude.Value;
+            }
+            if (updateDto.Longitude.HasValue)
+            {
+                updateCity.Longitude = updateDto.Longitude.Value;
+            }
+            if (!string.IsNullOrEmpty(updateDto.State))
+            {
+                updateCity.State = updateDto.State;
+            }
+            if (!string.IsNullOrEmpty(updateDto.Country))
+            {
+                updateCity.Country = updateDto.Country;
+            }
+
+            await _solarwatchDbContext.SaveChangesAsync();
+            return Ok(updateCity);
+        }
+
+        [HttpGet("AllCities"), Authorize(Roles = "User, Admin")]
+        public async Task<ActionResult<List<City>>> GetCities()
+        {
+            var cities = await _solarwatchDbContext.Cities.ToListAsync();
+            return Ok(cities);
         }
         
     }
