@@ -5,6 +5,7 @@ using SolarWatch.Models;
 using SolarWatch.Services;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.EntityFrameworkCore;
 using SolarWatch.Data;
@@ -31,7 +32,7 @@ namespace SolarWatch.Controllers
           
         }
 
-        [HttpGet("ByCity")]
+        [HttpGet("ByCity"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<SunriseSunsetData>> Get(string city, int year, int month, int day)
         {
             try
@@ -79,7 +80,7 @@ namespace SolarWatch.Controllers
             }
         }
 
-        [HttpGet("Db")]
+        [HttpGet("NewSearch"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<SunriseSunset>> GetSunriseSunsetToDb(string city, string inputDate)
         {
             try
@@ -124,6 +125,13 @@ namespace SolarWatch.Controllers
                 _logger.LogError(ex, "Error getting the sunrise/sunset");
                 return StatusCode(500, "Unexpected error occured.");
             }
+        }
+
+        [HttpGet("AllCities"), Authorize(Roles = "User, Admin")]
+        public async Task<ActionResult<DbSet<City>>> GetCities()
+        {
+            var cities = _solarwatchDbContext.Cities;
+            return cities;
         }
         
     }
