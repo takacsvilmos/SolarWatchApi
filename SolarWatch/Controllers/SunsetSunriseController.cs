@@ -162,6 +162,13 @@ namespace SolarWatch.Controllers
             return Ok(updateCity);
         }
 
+        [HttpDelete("Delete/{id}"), Authorize(Roles = "Admin")]
+        public async Task<ActionResult> DeleteCity(Guid id)
+        {
+            var deleteCity = await _solarwatchDbContext.Cities.Where(city => city.Id == id).ExecuteDeleteAsync();
+            return Ok($"{deleteCity} is deleted.");
+        }
+
         [HttpGet("AllCities"), Authorize(Roles = "User, Admin")]
         public async Task<ActionResult<List<City>>> GetCities()
         {
