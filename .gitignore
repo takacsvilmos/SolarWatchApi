@@ -1,6 +1,7 @@
 .vs
 SolarWatch/bin
 SolarWatch/obj
+SolarWatch/out
 SolarWatchTests/obj
 SolarWatchTests/bin
 SolarWatchIntegralTest/bin
