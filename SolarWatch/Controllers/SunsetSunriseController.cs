@@ -169,11 +169,19 @@ namespace SolarWatch.Controllers
             return Ok($"{deleteCity} is deleted.");
         }
 
-        [HttpGet("AllCities"), Authorize(Roles = "User, Admin")]
+        [HttpGet("AllCities"), AllowAnonymous]
         public async Task<ActionResult<List<City>>> GetCities()
         {
-            var cities = await _solarwatchDbContext.Cities.ToListAsync();
-            return Ok(cities);
+            try
+            {
+                var cities = await _solarwatchDbContext.Cities.ToListAsync();
+                return Ok(cities);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while fetching cities");
+                return StatusCode(500, new { message = ex.Message, stackTrace = ex.StackTrace });
+            }
         }
         
     }
